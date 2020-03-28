@@ -19,9 +19,9 @@ def parse_args():
 
     # data configuration
     parser.add_argument("--data_path", type=str,
-                        default="data/reuters.json",
+                        default="data/event.json",
                         help="path to dataset")
-    parser.add_argument("--dataset", type=str, default="reuters",
+    parser.add_argument("--dataset", type=str, default="event",
                         help="name of the dataset. "
                         "Options: [event]")
     
@@ -30,9 +30,9 @@ def parse_args():
                         "to zero if you want to use all the cpus.")
     
     # task configuration
-    parser.add_argument("--way", type=int, default=5,
+    parser.add_argument("--way", type=int, default=1,
                         help="#classes for each task")
-    parser.add_argument("--shot", type=int, default=5,
+    parser.add_argument("--shot", type=int, default=40,
                         help="#support examples for each class for each task")
     parser.add_argument("--query", type=int, default=25,
                         help="#query examples for each class for each task")
@@ -53,7 +53,7 @@ def parse_args():
     parser.add_argument("--embedding", type=str, default="bert",
                         help=("document embedding method. Options: "
                               "[bert]"))
-    parser.add_argument("--classifier", type=str, default="proto",
+    parser.add_argument("--classifier", type=str, default="r2d2",
                         help=("classifier. Options: [proto,r2d2]"))
     
     
@@ -123,7 +123,7 @@ def main():
     model["clf"] = get_classifier(args,ebd_dim)
 
     train_utils.train(train_data, val_data, model,args)
-    test_acc, test_std = train_utils.test(test_data, model,args,args.test_episodes,is_test = True)
+    test_acc, test_std = train_utils.test(test_data, model,args,args.test_episodes)
     
     if args.result_path:
         directory = args.result_path[:args.result_path.rfind("/")]
